@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const formik = useFormik({
@@ -62,6 +63,14 @@ export default function Login() {
               {formik.touched.password && formik.errors.password ? (
                 <div className="text-red-400 text-xs mt-1">{formik.errors.password}</div>
               ) : null}
+              <div className="text-right mt-1">
+                <Link 
+                  to="/forgot-password" 
+                  className="text-green-400 hover:underline text-xs"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
             
             <button
@@ -70,6 +79,15 @@ export default function Login() {
             >
               Submit
             </button>
+
+            <div className="flex justify-between text-sm mt-4">
+              <div>
+                Don't have an account? {' '}
+                <Link to="/register" className="text-green-400 hover:underline">
+                  Register here
+                </Link>
+              </div>
+            </div>
           </form>
         </div>
       </div>

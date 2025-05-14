@@ -117,7 +117,7 @@ export default function Register() {
                     value="user"
                     checked={formik.values.role === 'user'}
                     onChange={formik.handleChange}
-                    className="text-purple-500"
+                    className="form-radio h-4 w-4 text-purple-500"
                   />
                   <span className="ml-2">User</span>
                 </label>
@@ -128,7 +128,7 @@ export default function Register() {
                     value="admin"
                     checked={formik.values.role === 'admin'}
                     onChange={formik.handleChange}
-                    className="text-purple-500"
+                    className="form-radio h-4 w-4 text-purple-500"
                   />
                   <span className="ml-2">Admin</span>
                 </label>
