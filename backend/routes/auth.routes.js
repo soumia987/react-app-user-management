@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const authController = require("../controllers/auth.controller.");
-const authMiddleware = require("../middleware/auth.middleware");
-const adminMiddleware = require("../middleware/admin.midddleware");
+const authController = require("../controllers/authController");
+const authMiddleware = require("./middlwares/auth.middleware");
+const adminMiddleware = require("../middlwares/admin.middelware");
 const {
   validateLogin,
   validateRegister,
   checkValidation,
-} = require("../middleware/validate.middleware");
+} = require("../middlwares/validation.middleware");
 
 
 router.post("/register", validateRegister, checkValidation, authController.register)
 router.post("/login", validateLogin, checkValidation, authController.login)
+router.get("/verify-email", authController.verifyEmail);
 
 router.get("/me", authMiddleware, authController.getMe)
 router.get("/admin", authMiddleware, adminMiddleware, (req, res) =>{
@@ -19,7 +20,7 @@ router.get("/admin", authMiddleware, adminMiddleware, (req, res) =>{
 })
 
 router.get("/test", (req, res) =>{
-    res.send("hello world i'm testing my backend")
+    res.send("let's test it")
 })
 
 module.exports = router
