@@ -1,14 +1,18 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import API from '../api';
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       name: '',
       email: '',
       password: '',
       confirmPassword: '',
-      role: 'user' // default role
+      role: 'user' 
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -26,9 +30,20 @@ export default function Register() {
         .oneOf(['user', 'admin'], 'Invalid role')
         .required('Role is required')
     }),
-    onSubmit: (values) => {
-      console.log(values);
-      // Here you would typically send the data to your backend
+    onSubmit: async (values) => {
+      try {
+        const { confirmPassword, ...userData } = values;
+        await API.post('/register', {
+          username: userData.name,
+          email: userData.email,
+          password: userData.password,
+          isAdmin: userData.role === 'admin'
+        });
+        alert('Registration successful! Please check your email to verify your account.');
+        navigate('/login');
+      } catch (error) {
+        alert(error.response?.data?.message || 'Registration failed');
+      }
     },
   });
 
@@ -141,8 +156,9 @@ export default function Register() {
             <button
               type="submit"
               className="w-full bg-green-600 text-gray-800 py-2 rounded hover:bg-green-500 transition mt-6"
+              disabled={formik.isSubmitting}
             >
-              Register
+              {formik.isSubmitting ? 'Registering...' : 'Register'}
             </button>
           </form>
         </div>

@@ -1,38 +1,29 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import API from '../api';
 
-export default function Login() {
-  const navigate=useNavigate
-
+export default function ForgotPassword() {
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: '',
     },
-    
     validationSchema: Yup.object({
       email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
-      password: Yup.string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Password is required'),
     }),
-
     onSubmit: async(values) => {
-      try{
-        const response=await API.post('login',values);
-        localStorage.setItem('token',response.data.token);
-        localStorage.setItem('user',JSON.stringify(response.data.user));
-        navigate('/dashbord');
+        try{
+            await API.post('/forgot-password',{email:values.email});
+            alert ('password reset link has been sent to  ${values.email}');
 
-      }catch(error){
-        alert(error.response?.data?.message  || 'login failed');
-      }
-
+        }catch(error){
+            alert(error.response?.data?.message ||'failed to send reset link');
+        }
       console.log(values);
+      // Here you would typically send the reset password link to the email
+      alert(`Password reset link has been sent to ${values.email}`);
     },
   });
 
@@ -40,9 +31,9 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-screen bg-gray-200 p-4">
       <div className="bg-white shadow-lg w-full max-w-4xl flex flex-col md:flex-row overflow-hidden rounded-lg">
         <div className="w-full md:w-1/2 p-10">
-          <h2 className="text-4xl font-bold mb-6">Login</h2>
+          <h2 className="text-4xl font-bold mb-6">Forgot Password</h2>
           <p className="text-gray-600 text-sm">
-            Welcome, please enter your Email and Password.
+            Enter your email address and we'll send you a link to reset your password.
           </p>
         </div>
         <div className="w-full md:w-1/2 bg-gray-800 text-white p-10">
@@ -62,43 +53,19 @@ export default function Login() {
                 <div className="text-red-400 text-xs mt-1">{formik.errors.email}</div>
               ) : null}
             </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm mb-1">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-              />
-              {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-400 text-xs mt-1">{formik.errors.password}</div>
-              ) : null}
-              <div className="text-right mt-1">
-                <Link 
-                  to="/forgot-password" 
-                  className="text-green-400 hover:underline text-xs"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-            </div>
             
             <button
               type="submit"
               className="w-full bg-green-600 text-gray-800 py-2 rounded hover:bg-green-500 transition"
             >
-              Submit
+              Send Reset Link
             </button>
 
             <div className="flex justify-between text-sm mt-4">
               <div>
-                Don't have an account? {' '}
-                <Link to="/register" className="text-green-400 hover:underline">
-                  Register here
+                Remember your password? {' '}
+                <Link to="/login" className="text-green-400 hover:underline">
+                  Login here
                 </Link>
               </div>
             </div>
